@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .dashboard {
+            width: 90%;
+            max-width: 1200px;
+            padding: 40px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-radius: 10px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px; /* Gap between dashboard elements */
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px; /* Adjust margin as needed */
+        }
+
+        .dashboard-elements {
+            width: 100%; /* Full width of the parent container */
+            display: flex;
+            justify-content: space-around; /* Evenly spaced elements */
+            gap: 20px; /* Gap between dashboard elements */
+            flex-wrap: wrap;
+            height: 280px; /* Set the height of the dashboard elements container */
+        }
+
+        .dashboard-element {
+            width: calc(33.33% - 20px); /* Adjust width to fit three items per row with gap */
+            height: 100%; /* Fill the entire height of the dashboard elements container */
+            background-color: #007BFF;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-element:hover {
+            transform: scale(1.1);
+        }
+
+        .dashboard-element:hover img {
+            transform: scale(1.2);
+        }
+
+        .dashboard-element img {
+            width: 80px;
+            height: 80px;
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-element a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* Styling for the login link */
+        .login-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h1>Welcome, Admin</h1>
+        
+        <!-- Dashboard Elements -->
+        <div class="dashboard-elements">
+            <div class="dashboard-element">
+                <a href="/view_students">
+                    <img src="https://w7.pngwing.com/pngs/17/243/png-transparent-computer-icons-arshad-ayub-graduate-business-school-students-miscellaneous-logo-monochrome.png" alt="View Students">
+                    <div>View Students</div>
+                </a>
+            </div>
+
+            <div class="dashboard-element">
+                <a href="/view_marks">
+                    <img src="https://img.freepik.com/free-vector/online-certification-illustration-design_23-2148570820.jpg?t=st=1718547273~exp=1718550873~hmac=fbcc12a758139e1447505b4bf6bf396989b6864fb79906fb598399ae69374eeb&w=740" alt="View Marks">
+                    <div>View Marks</div>
+                </a>
+            </div>
+
+            <div class="dashboard-element">
+                <a href="/view_report">
+                    <img src="https://www.maxwellgeosystems.com/img/mos/products/doc_management.png" alt="View Report">
+                    <div>View GPA</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Logout Link -->
+        <a href="/logout" class="login-link">Logout</a>
+    </div>
+</body>
+</html>

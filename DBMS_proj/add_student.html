@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            background-image: url('https://img.freepik.com/free-photo/top-view-paper-dove-with-copy-space_23-2148630337.jpg?t=st=1716998974~exp=1717002574~hmac=0eb96a75504f7d95e022eba40357ccd0332eb703607a7289eee6f08ec617748f&w=1380');
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-form {
+            width: 100%;
+            max-width: 700px; 
+            padding: 30px; 
+            background-color: lavender;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+            position: relative;
+            left: -200px; 
+        }
+
+        .login-form:hover {
+            transform: scale(1.05);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group div {
+            flex: 0 0 48%;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group input[type="email"],
+        .form-group input[type="date"],
+        .form-group input[type="tel"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 10px; 
+            margin-bottom: 5px; 
+            border: 1px solid #addfff;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px; 
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-form">
+        <h2>Enter the student details here.</h2>
+        <form id="add-student-form" action="/admin/add-student" method="post">
+            <div class="form-group">
+                <div>
+                    <label for="rollNo">Roll No:</label>
+                    <input type="text" id="rollNo" name="rollNo" required>
+                </div>
+                <div>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                <div>
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <label for="dateOfBirth">Date of Birth:</label>
+                    <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+                </div>
+                <div>
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" name="address" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <label for="phoneNumber">Phone Number:</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" required>
+                </div>
+                <div>
+                    <label for="department">Department:</label>
+                    <input type="text" id="department" name="department" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <label for="yearOfStudy">Year of Study:</label>
+                    <input type="number" id="yearOfStudy" name="yearOfStudy" required>
+                </div>
+                <div>
+                    <label for="section">Section:</label>
+                    <input type="text" id="section" name="section" required>
+                </div>
+            </div>
+            <button type="submit">Add Student</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('add-student-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new URLSearchParams(new FormData(e.target)).toString();
+
+            const response = await fetch('/admin/add-student', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            });
+
+            if (response.ok) {
+                alert('Student added successfully');
+                window.location.href = '/admin/dashboard';
+            } else {
+                alert('Error adding student');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <style>
+        body {
+            background-image: url('https://us.123rf.com/450wm/stockbroker/stockbroker1903/stockbroker190300554/118499817-female-high-school-teacher-standing-in-front-of-interactive-whiteboard-teaching-lesson.jpg?ver=6');
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-size: cover;
+        }
+        header {
+            background-color: rgb(36, 106, 177);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        nav {
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 0;
+        }
+        nav a, .dropbtn {
+            color: #fff;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+        }
+        nav a:hover, .dropbtn:hover {
+            background-color: #575757;
+        }
+        .dropdown {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            top: 100%;
+            left: 0;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .container {
+            padding: 20px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            margin: 20px auto;
+            width: 80%;
+            border-radius: 10px;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Student Management System</h1>
+</header>
+
+<nav>
+    <a href="javascript:void(0)" onclick="showSection('home')">Home</a>
+    <a href="javascript:void(0)" onclick="showSection('about')">About Us</a>
+    <a href="javascript:void(0)" onclick="showSection('contact')">Contact Us</a>
+    <div class="dropdown">
+        <span class="dropbtn">Login</span>
+        <div class="dropdown-content">
+            <a href="/admin">Admin</a>
+            <a href="/student">Student</a>
+        </div>
+    </div>
+</nav>
+
+<div id="content" class="container">
+    <h2>Home</h2>
+    <p>Welcome to the Student Management System of our institution. Our system is designed to streamline academic and administrative processes, making it easier for students and faculty to manage their activities efficiently.</p>
+    <p>Here, you can view your academic records, register for courses, and communicate with faculty members. We strive to provide a seamless experience for all users.</p>
+</div>
+
+<footer>
+    <p>&copy; 2024 Student Management System</p>
+</footer>
+
+<script>
+    function showSection(section) {
+        const content = document.getElementById('content');
+        if (section === 'home') {
+            content.innerHTML = `
+                <h2>Home</h2>
+                <p>Welcome to the Student Management System of our institution. Our system is designed to streamline academic and administrative processes, making it easier for students and faculty to manage their activities efficiently.</p>
+                <p>Here, you can view your academic records, register for courses, and communicate with faculty members. We strive to provide a seamless experience for all users.</p>
+            `;
+        } else if (section === 'about') {
+            content.innerHTML = `
+                <h2>About Us</h2>
+                <p>Our institution is committed to providing top-quality education and services to our students. We aim to foster an environment that encourages academic excellence, innovation, and personal growth.</p>
+                <p>At our institution, you will find dedicated faculty, modern facilities, and numerous opportunities for extracurricular activities. We believe in nurturing well-rounded individuals who are prepared for success.</p>
+            `;
+        } else if (section === 'contact') {
+            content.innerHTML = `
+                <h2>Contact Us</h2>
+                <p>If you have any questions or need assistance, please feel free to reach out to us at contact@institution.edu or call us at (123) 456-7890.</p>
+                <p>We are located at 123 University Street, City, State. Our office hours are Monday to Friday, 9:00 AM to 5:00 PM. We look forward to hearing from you!</p>
+            `;
+        }
+    }
+</script>
+
+</body>
+</html>

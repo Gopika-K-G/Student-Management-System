@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Marks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .course-table {
+            margin-bottom: 20px;
+        }
+
+        .course-info {
+            font-size: 18px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>View Marks</h1>
+        <div class="input-group">
+            <input type="number" id="semester-input" placeholder="Enter Semester">
+            <button onclick="fetchMarks()">View Marks</button>
+            <button onclick="downloadReport()">Download Report</button>
+        </div>
+        <div id="courses-container">
+            <!-- Course tables will be generated here -->
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.3/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        async function fetchMarks() {
+            const semester = document.getElementById('semester-input').value;
+
+            if (!semester) {
+                alert('Please enter a semester.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/admin/view-marks?semester=${semester}`);
+                const data = await response.json();
+
+                displayMarks(data);
+            } catch (error) {
+                console.error('Error fetching marks', error);
+            }
+        }
+
+        function displayMarks(data) {
+            const coursesContainer = document.getElementById('courses-container');
+            coursesContainer.innerHTML = '';
+
+            data.courses.forEach(course => {
+                const courseDiv = document.createElement('div');
+                courseDiv.classList.add('course-table');
+
+                const courseInfo = document.createElement('div');
+                courseInfo.classList.add('course-info');
+                courseInfo.innerText = `Course ID: ${course.course_id}, Course Name: ${course.course_name}`;
+                courseDiv.appendChild(courseInfo);
+
+                const table = document.createElement('table');
+                const thead = document.createElement('thead');
+                const headerRow = document.createElement('tr');
+                ['Roll No', 'Name', 'Marks', 'Grade'].forEach(headerText => {
+                    const th = document.createElement('th');
+                    th.innerText = headerText;
+                    headerRow.appendChild(th);
+                });
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+
+                const tbody = document.createElement('tbody');
+                data.marks.forEach(student => {
+                    const mark = student.marks.find(m => m.course_id === course.course_id);
+                    if (mark) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${student.student_id}</td>
+                            <td>${student.first_name} ${student.last_name}</td>
+                            <td>${mark.marks_obtained}</td>
+                            <td>${mark.grade}</td>
+                        `;
+                        tbody.appendChild(row);
+                    }
+                });
+                table.appendChild(tbody);
+
+                courseDiv.appendChild(table);
+                coursesContainer.appendChild(courseDiv);
+            });
+        }
+
+        function downloadReport() {
+            const semester = document.getElementById('semester-input').value;
+
+            if (!semester) {
+                alert('Please enter a semester.');
+                return;
+            }
+
+            fetch(`/admin/view-marks?semester=${semester}`)
+                .then(response => response.json())
+                .then(data => {
+                    generateExcelReport(data);
+                    generatePDFReport(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching marks', error);
+                });
+        }
+
+        function generateExcelReport(data) {
+            const wb = XLSX.utils.book_new();
+
+            data.courses.forEach(course => {
+                // Truncate or modify the sheet name if it exceeds 31 characters
+                const sheetName = course.course_name.substring(0, 31); // Truncate to 31 characters
+
+                const wsData = [];
+                const wsCols = [
+                    { wpx: 100 }, // Roll No
+                    { wpx: 200 }, // Name
+                    { wpx: 100 }, // Marks
+                    { wpx: 100 }  // Grade
+                ];
+
+                wsData.push(['Roll No', 'Name', 'Marks', 'Grade']);
+
+                data.marks.forEach(student => {
+                    const mark = student.marks.find(m => m.course_id === course.course_id);
+                    if (mark) {
+                        wsData.push([student.student_id, `${student.first_name} ${student.last_name}`, mark.marks_obtained, mark.grade]);
+                    }
+                });
+
+                const ws = XLSX.utils.aoa_to_sheet(wsData);
+                ws['!cols'] = wsCols;
+
+                // Append the sheet to the workbook with the truncated sheet name
+                XLSX.utils.book_append_sheet(wb, ws, sheetName);
+            });
+
+            XLSX.writeFile(wb, `semester_${data.semester}_report.xlsx`);
+        }
+
+        function generatePDFReport(data) {
+            const element = document.getElementById('courses-container');
+
+            html2pdf(element, {
+                margin: 10,
+                filename: `semester_${data.semester}_report.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { format: 'a4', orientation: 'portrait' }
+            });
+        }
+    </script>
+</body>
+</html>

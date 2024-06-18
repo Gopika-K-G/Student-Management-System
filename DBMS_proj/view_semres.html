@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Semester Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 600px;
+            padding: 40px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column; /* Adjusted to column layout */
+            justify-content: center; /* Center vertically */
+            align-items: center; /* Center horizontally */
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%; /* Ensure form takes full width */
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #resultsTable {
+            display: none; /* Initially hide the table */
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        
+        #resultsTable th, #resultsTable td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        #resultsTable th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Semester</h1>
+        <form id="semesterForm">
+            <label for="semesterNumber">Enter Semester Number:</label>
+            <input type="number" id="semesterNumber" name="semesterNumber" min="1" required>
+            <button type="submit">View Results</button>
+        </form>
+        
+       <center><table id="resultsTable">
+            <thead>
+                <tr>
+                    <th>Course ID</th>
+                    <th>Marks Obtained</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody id="resultsBody">
+                <!-- Results will be dynamically inserted here -->
+            </tbody>
+        </table></center>
+    </div>
+   <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const form = document.getElementById('semesterForm');
+        const resultsTable = document.getElementById('resultsTable');
+        
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const semesterNumber = document.getElementById('semesterNumber').value;
+            
+            try {
+                // Fetch student ID based on logged-in username
+                const responseUser = await fetch('/api/getStudentId');
+                if (!responseUser.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                const userData = await responseUser.json();
+                const student_id = userData.student_id;
+                
+                // Fetch marks for the given semester and student ID
+                const responseMarks = await fetch(`/api/getMarks?student_id=${student_id}&semester=${semesterNumber}`);
+                if (!responseMarks.ok) {
+                    throw new Error('Failed to fetch marks data');
+                }
+                const marksData = await responseMarks.json();
+                console.log('Marks Data:', marksData);
+    
+                // Display marks in the table
+                const resultsBody = document.getElementById('resultsBody');
+                resultsBody.innerHTML = ''; // Clear previous results
+                
+                marksData.marks.forEach(mark => { // Iterate over marks array
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${mark.course_id}</td>
+                        <td>${mark.marks_obtained}</td>
+                        <td>${mark.grade}</td>
+                    `;
+                    resultsBody.appendChild(row);
+                });
+                
+                // Show the results table
+                resultsTable.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error fetching semester marks', error);
+                // Handle error gracefully
+                alert('Failed to fetch semester marks. Please try again later.');
+            }
+        });
+    });
+   </script> 
+</body>
+</html>

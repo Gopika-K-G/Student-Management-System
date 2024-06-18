@@ -1,0 +1,86 @@
+CREATE TABLE Admins (
+    admin_id VARCHAR(50) PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    department VARCHAR(100)
+);
+insert into admins values('adm1','Admin', 'kecadm', 'kecadmin@kongu.edu', 'Dr.S.Shanthi','Professor', 'CSE');
+
+CREATE TABLE Students (
+    student_id VARCHAR(50) PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    date_of_birth DATE,
+    address TEXT,
+    phone_number VARCHAR(15),
+    department VARCHAR(100),
+    year_of_study INT,
+    section VARCHAR(10)
+);
+insert into students values('22CSR057', '22CSR057','kecstud', 'gopikakg.22cse@kongu.edu', 'Gopika','K G', '30-Aug-2004', '4/126, Moolakkarai kadu, Periyeri (Po), Attur(Tk), Salem (Dt)','8610755869', 'CSE', 2, 'A');
+insert into students values('22CSR037', '22CSR037','kecstud', 'debehaaj.22cse@kongu.edu', 'Debehaa','J', '27-Sep-2004', '15/120 Ayeepalayam,Athanur(Po),Rasipuram(Tk),Namakkal(Dt)','9842027519', 'CSE', 2, 'A');
+insert into students values('22CSR039', '22CSR039','kecstud', 'deepigap.22cse@kongu.edu', 'Deepiga','P', '20-Nov-2004', '112, Agrahara street Bala silks road Near star lodge','6381553551', 'CSE', 2, 'A');
+insert into students values('22CSR043', '22CSR043','kecstud', 'dhaaranig.22cse@kongu.edu', 'Dhaarani','G', '15-Oct-2004', '28 Agilmedu 2nd Street Erode','9976831113', 'CSE', 2, 'A');
+insert into students values('22CSR044', '22CSR044','kecstud', 'dhamayandhir.22cse@kongu.edu', 'Dhamayandhi','R', '14-Sept-2004', '1/84 Lagampalayam,Kuttagam(PO),vemandampalayam(VIA),Nambiyur(TK)','9344337350', 'CSE', 2, 'A');
+
+
+CREATE TABLE Department (
+    department_id VARCHAR(50) PRIMARY KEY,
+    department_name VARCHAR(100) UNIQUE NOT NULL
+);
+
+CREATE TABLE Staff (
+    staff_id VARCHAR(50) PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    department_id VARCHAR(50),
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone_number VARCHAR(15) NOT NULL,
+    constraint fk1 FOREIGN KEY (department_id) REFERENCES Department(department_id)
+);
+
+
+CREATE TABLE Courses (
+    course_id VARCHAR(50) PRIMARY KEY,
+    course_name VARCHAR(100),
+    credits INT
+);
+
+CREATE TABLE Staff_Courses (
+    staff_id VARCHAR(50),
+    course_id VARCHAR(50),
+    course_year INT,
+    course_section VARCHAR(10),
+    PRIMARY KEY (staff_id, course_id),
+    constraint fk2 FOREIGN KEY (staff_id) REFERENCES Staff(staff_id),
+    constraint fk3 FOREIGN KEY (course_id) REFERENCES Courses(course_id)
+);
+CREATE TABLE StudentMarks (
+    student_id VARCHAR(50),
+    course_id VARCHAR(50),
+    semester INT,
+    marks_obtained DECIMAL,
+    grade VARCHAR,
+    PRIMARY KEY (student_id, course_id),
+    CONSTRAINT fk4 FOREIGN KEY (student_id) REFERENCES Students(student_id),
+    CONSTRAINT fk5 FOREIGN KEY (course_id) REFERENCES Courses(course_id)
+);
+
+CREATE TABLE Results (
+    student_id VARCHAR(50),
+    semester INT,
+    gpa DECIMAL,
+    cgpa DECIMAL,
+    PRIMARY KEY (student_id, semester),
+    CONSTRAINT fk6 FOREIGN KEY (student_id) REFERENCES Students(student_id)
+);
+
+select * from students;
